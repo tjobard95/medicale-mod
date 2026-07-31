@@ -70,12 +70,13 @@ public class PotionMachineBlock extends Block implements BlockEntityProvider {
 
     @Nullable
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state,
                                                                  BlockEntityType<T> type) {
-        if (world.isClient) {
+        if (world.isClient || type != ModBlockEntities.POTION_MACHINE) {
             return null;
         }
-        return validateTicker(type, ModBlockEntities.POTION_MACHINE,
-                (w, pos, s, be) -> PotionMachineBlockEntity.tick(w, pos, s, be));
+        return (BlockEntityTicker<T>) (BlockEntityTicker<PotionMachineBlockEntity>)
+                PotionMachineBlockEntity::tick;
     }
 }

@@ -201,3 +201,10 @@ Commande pour l'obtenir : `/give @p medical-mod:potion_machine`
 
 **Rappel** : le Distillateur n'a aucune recette de craft et est incassable.
 `/give @p medicalmod:potion_machine`
+
+## 2.0.1 — Correctif de compilation
+
+- **Correctif** : `PotionMachineBlock.getTicker()` appelait `validateTicker(...)`, une methode
+  qui n'existe que sur `BlockWithEntity` — or ce bloc etend `Block` directement et implemente
+  `BlockEntityProvider` a part. Remplace par une comparaison de type manuelle. Le Distillateur
+  nutritif compile et fonctionne desormais correctement.
