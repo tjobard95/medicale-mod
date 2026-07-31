@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "medicalmod:block/potion_machine" }
+  }
+}

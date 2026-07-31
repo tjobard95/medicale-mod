@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BSB",
+    " M "
+  ],
+  "key": {
+    "B": {
+      "item": "medicalmod:bandage"
+    },
+    "S": {
+      "item": "medicalmod:syringe"
+    },
+    "M": {
+      "item": "medicalmod:herbal_medicine"
+    }
+  },
+  "result": {
+    "item": "medicalmod:medkit"
+  }
+}

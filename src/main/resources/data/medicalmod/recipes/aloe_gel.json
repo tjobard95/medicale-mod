@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "medicalmod:aloe_leaf"
+    }
+  ],
+  "result": {
+    "item": "medicalmod:aloe_gel",
+    "count": 2
+  }
+}

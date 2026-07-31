@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "medicalmod:block/cotton_crop_stage0"
+  }
+}

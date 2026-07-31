@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "medicalmod:aloe_leaf" },
+    { "item": "medicalmod:chamomile_flower" },
+    { "item": "medicalmod:calendula_flower" },
+    { "item": "minecraft:sugar" }
+  ],
+  "result": { "item": "medicalmod:herbal_medicine", "count": 2 }
+}

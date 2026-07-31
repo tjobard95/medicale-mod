@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [ "G", "N", "I" ],
+  "key": {
+    "G": { "item": "minecraft:glass_pane" },
+    "N": { "item": "minecraft:iron_nugget" },
+    "I": { "item": "minecraft:iron_ingot" }
+  },
+  "result": { "item": "medicalmod:syringe" }
+}

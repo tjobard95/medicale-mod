@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [ "C C", "CCC", "CTC" ],
+  "key": {
+    "C": { "item": "medicalmod:cloth" },
+    "T": { "item": "medicalmod:thread" }
+  },
+  "result": { "item": "medicalmod:parachute" }
+}

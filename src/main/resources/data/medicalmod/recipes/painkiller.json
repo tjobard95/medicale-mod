@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "medicalmod:chamomile_flower" },
+    { "item": "medicalmod:chamomile_flower" },
+    { "item": "medicalmod:calendula_flower" }
+  ],
+  "result": { "item": "medicalmod:painkiller", "count": 2 }
+}

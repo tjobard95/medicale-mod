@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "medicalmod:block/potion_machine_top",
+    "bottom": "medicalmod:block/potion_machine_bottom",
+    "side": "medicalmod:block/potion_machine_side"
+  }
+}

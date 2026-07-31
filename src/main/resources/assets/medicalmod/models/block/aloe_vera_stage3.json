@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "medicalmod:block/aloe_vera_stage3"
+  }
+}

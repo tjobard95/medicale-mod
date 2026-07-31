@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "medicalmod:aloe_gel" },
+    { "item": "medicalmod:calendula_flower" }
+  ],
+  "result": { "item": "medicalmod:salve", "count": 2 }
+}

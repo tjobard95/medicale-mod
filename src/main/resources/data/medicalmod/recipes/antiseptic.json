@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "medicalmod:calendula_flower"
+    },
+    {
+      "item": "medicalmod:calendula_flower"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "result": {
+    "item": "medicalmod:antiseptic"
+  }
+}

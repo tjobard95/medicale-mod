@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "medicalmod:antiseptic" },
+    { "item": "medicalmod:chamomile_flower" },
+    { "item": "medicalmod:syringe" }
+  ],
+  "result": { "item": "medicalmod:medicine", "count": 2 }
+}

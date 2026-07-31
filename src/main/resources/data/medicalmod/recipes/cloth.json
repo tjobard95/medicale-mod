@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [ "TT", "TT" ],
+  "key": { "T": { "item": "medicalmod:thread" } },
+  "result": { "item": "medicalmod:cloth", "count": 1 }
+}

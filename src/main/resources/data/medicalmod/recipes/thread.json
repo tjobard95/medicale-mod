@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [ { "item": "medicalmod:cotton" } ],
+  "result": { "item": "medicalmod:thread", "count": 4 }
+}
