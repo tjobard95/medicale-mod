@@ -27,7 +27,13 @@ public class ModBlocks {
      * Aucune recette de craft -> uniquement via /give (OP) ou creatif.
      */
     public static final Block POTION_MACHINE = registerBlockWithItem("potion_machine",
-            new PotionMachineBlock(FabricBlockSettings.copyOf(Blocks.BLAST_FURNACE).strength(-1.0F, 3600000.0F)));
+            new PotionMachineBlock(FabricBlockSettings.copyOf(Blocks.BLAST_FURNACE)
+                    .strength(-1.0F, 3600000.0F)
+                    // copyOf recopie la luminance du haut fourneau, qui vaut
+                    // createLightLevelFromLitBlockState(13) et lit donc la propriete LIT.
+                    // Ce bloc ne declare pas LIT : sans cette neutralisation, la lambda
+                    // est evaluee a la construction des BlockState et fait planter le jeu.
+                    .luminance(state -> 0)));
 
     private static Block registerBlockWithItem(String name, Block block) {
         Registry.register(Registries.ITEM, new Identifier(MedicalMod.MOD_ID, name),
