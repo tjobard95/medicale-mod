@@ -8,11 +8,23 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-/** Interface du Distillateur nutritif (fond du coffre vanilla + barre de progression). */
+/**
+ * Interface du Distillateur nutritif.
+ * Texture sur mesure : 2 entrees a gauche, fleche de progression, 1 sortie a droite.
+ */
 public class PotionMachineScreen extends HandledScreen<PotionMachineScreenHandler> {
 
     private static final Identifier TEXTURE =
-            new Identifier("minecraft", "textures/gui/container/generic_54.png");
+            new Identifier(MedicalMod.MOD_ID, "textures/gui/potion_machine.png");
+
+    /** Fleche : position dans le GUI et taille (doit coller a la texture). */
+    private static final int ARROW_X = 70;
+    private static final int ARROW_Y = 37;
+    private static final int ARROW_WIDTH = 38;
+    private static final int ARROW_HEIGHT = 12;
+    /** Position de la fleche "pleine" dans le fichier texture. */
+    private static final int ARROW_TEXTURE_U = 176;
+    private static final int ARROW_TEXTURE_V = 0;
 
     public PotionMachineScreen(PotionMachineScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -25,16 +37,14 @@ public class PotionMachineScreen extends HandledScreen<PotionMachineScreenHandle
         int x = (this.width - this.backgroundWidth) / 2;
         int y = (this.height - this.backgroundHeight) / 2;
 
-        context.drawTexture(TEXTURE, x, y, 0, 0, this.backgroundWidth, 3 * 18 + 17);
-        context.drawTexture(TEXTURE, x, y + 3 * 18 + 17, 0, 126, this.backgroundWidth, 96);
+        context.drawTexture(TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        // Barre de progression : rectangle qui se remplit entre les entrees et la sortie.
-        float ratio = this.handler.getProgressRatio();
-        int width = (int) (48 * ratio);
-        if (width > 0) {
-            context.fill(x + 64, y + 38, x + 64 + width, y + 44, 0xFFE2A826);
+        // La fleche se remplit de gauche a droite au fil de la fabrication.
+        int progress = (int) (ARROW_WIDTH * this.handler.getProgressRatio());
+        if (progress > 0) {
+            context.drawTexture(TEXTURE, x + ARROW_X, y + ARROW_Y,
+                    ARROW_TEXTURE_U, ARROW_TEXTURE_V, progress, ARROW_HEIGHT);
         }
-        context.drawBorder(x + 64, y + 38, 48, 6, 0xFF373737);
     }
 
     @Override

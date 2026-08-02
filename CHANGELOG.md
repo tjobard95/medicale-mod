@@ -221,3 +221,14 @@ Commande pour l'obtenir : `/give @p medical-mod:potion_machine`
   aucune luminosite dependant d'un etat : ils n'etaient pas concernes.
 
 Cette version corrige un crash bloquant : la 2.0.0 et la 2.0.1 sont inutilisables.
+
+## 2.1.0 — Interface du Distillateur nutritif
+
+- **Texture d'interface sur mesure** (`textures/gui/potion_machine.png`).
+  Avant, la machine reutilisait la texture du coffre vanilla : 27 cases affichees
+  alors que la machine n'en a que 3, ce qui rendait l'interface illisible.
+- Nouvelle disposition claire :
+  - 2 cases d'entree empilees a gauche (bouteille d'eau en haut, ingredient en bas)
+  - fleche de progression au centre, qui se remplit pendant les 10 secondes de fabrication
+  - case de sortie a droite, encadree pour la distinguer
+- La barre de progression dessinee "a la main" est remplacee par une vraie fleche texturee.
