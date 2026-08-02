@@ -16,6 +16,21 @@ import java.util.Set;
 public class InjuryData {
     private final Set<InjuryType> active = EnumSet.noneOf(InjuryType.class);
 
+    /** Tick monde de la derniere blessure recue, pour le delai de repit. */
+    private long lastInjuryTick = Long.MIN_VALUE;
+
+    public long getLastInjuryTick() {
+        return this.lastInjuryTick;
+    }
+
+    public void setLastInjuryTick(long tick) {
+        this.lastInjuryTick = tick;
+    }
+
+    public int count() {
+        return this.active.size();
+    }
+
     public boolean has(InjuryType type) {
         return this.active.contains(type);
     }

@@ -1,6 +1,8 @@
 package com.example.medicalmod;
 
 import com.example.medicalmod.block.ModBlocks;
+import com.example.medicalmod.command.MedicalModCommand;
+import com.example.medicalmod.config.MedicalModConfig;
 import com.example.medicalmod.block.entity.ModBlockEntities;
 import com.example.medicalmod.block.entity.PotionMachineBlockEntity;
 import com.example.medicalmod.screen.ModScreenHandlers;
@@ -15,6 +17,7 @@ import com.example.medicalmod.potion.ModEffects;
 import com.example.medicalmod.potion.ModPotions;
 import com.example.medicalmod.network.ModNetworking;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -30,6 +33,8 @@ public class MedicalMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        MedicalModConfig.load();
+
         // L'ordre est important : les blocs avant les items.
         ModBlocks.registerModBlocks();
         ModBlockEntities.registerBlockEntities();
@@ -46,6 +51,7 @@ public class MedicalMod implements ModInitializer {
         registerInjuryTriggers();
         registerSyncEvents();
         LootIntegration.register();
+        CommandRegistrationCallback.EVENT.register(MedicalModCommand::register);
 
         LOGGER.info("Medical Mod charge !");
     }

@@ -241,3 +241,35 @@ Cette version corrige un crash bloquant : la 2.0.0 et la 2.0.1 sont inutilisable
 - Saturation, Adrenaline et Serum de premiers secours apparaissent desormais dans l'onglet,
   sous leurs 3 formes : a boire, en jet, persistante.
 - Ordre d'enregistrement corrige : les potions sont enregistrees AVANT le groupe creatif.
+
+## 2.2.0 — Blessures beaucoup plus rares et entierement reglables
+
+Le systeme etait trop punitif : une chute de 10 degats donnait 70% de fracture,
+et un combat de 5 coups 71% de saignement. Rééquilibrage complet.
+
+**Nouvelles probabilites (par defaut)**
+| Situation | Avant | Apres |
+|---|---|---|
+| Chute 10 degats -> fracture | 70% | 8% |
+| Chute 14 degats -> fracture | 100% | 24% |
+| Chute 25 degats -> fracture | 100% | 60% (plafond) |
+| Saignement, 5 coups recus | 71% | 30% |
+| Infection | 12% | 4% |
+| Commotion (explosion) | 40% | 10% |
+
+- Seuil de fracture releve de 5 a 8 degats de chute : les petites chutes ne cassent plus rien.
+- Seuil de saignement releve de 4 a 6 degats.
+- **Plafond** de 60% sur la fracture : meme une chute enorme n'est jamais une certitude.
+- **Max 2 blessures simultanees** : impossible de cumuler les 4.
+- **Repit de 30 s** apres une blessure : plus d'enchainement en rafale.
+
+**Tout est desormais reglable dans `config/medicalmod.json`**, sans recompiler.
+
+**Nouvelles commandes**
+| Commande | Niveau | Effet |
+|---|---|---|
+| `/medicalmod info` | tous | Affiche les reglages actuels |
+| `/medicalmod difficulty <0.0-3.0>` | OP 2 | Multiplie toutes les probabilites |
+| `/medicalmod injuries on\|off` | OP 2 | Active / coupe les blessures |
+| `/medicalmod heal` | OP 2 | Soigne toutes ses blessures |
+| `/medicalmod reload` | OP 2 | Recharge la config |

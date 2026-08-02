@@ -1,5 +1,6 @@
 package com.example.medicalmod.injury;
 
+import com.example.medicalmod.config.MedicalModConfig;
 import com.example.medicalmod.enchantment.ModEnchantments;
 import com.example.medicalmod.inventory.BackSlotAccess;
 import com.example.medicalmod.network.ModNetworking;
@@ -29,18 +30,8 @@ import org.joml.Vector3f;
  */
 public final class InjuryManager {
 
-    // --- Reglages rapides (modifiables sans toucher au reste) ---
-    /** Degats de chute a partir desquels une fracture est possible. */
-    public static final float FALL_THRESHOLD = 5.0F;
-    /** Probabilite de fracture par point de degat de chute au-dela du seuil. */
-    public static final float FALL_CHANCE_PER_POINT = 0.14F;
-    /** Degats tranchants a partir desquels un saignement est possible. */
-    public static final float BLEED_THRESHOLD = 4.0F;
-    public static final float BLEED_CHANCE = 0.22F;
-    public static final float INFECTION_CHANCE = 0.12F;
-    /** Interval entre deux ticks de degats de saignement. */
-    public static final int BLEED_INTERVAL = 100; // 5 secondes
-    public static final float BLEED_DAMAGE = 1.0F;
+    // Tous les reglages vivent desormais dans config/medicalmod.json
+    // (voir MedicalModConfig). Modifiable a chaud avec /medicalmod reload.
 
     private static final DustParticleEffect BLOOD =
             new DustParticleEffect(new Vector3f(0.62F, 0.03F, 0.03F), 1.0F);
@@ -65,7 +56,21 @@ public final class InjuryManager {
         if (player.isCreative() || player.isSpectator()) {
             return;
         }
-        if (get(player).add(type)) {
+        MedicalModConfig config = MedicalModConfig.get();
+        InjuryData data = get(player);
+
+        // Trop de blessures en cours : on n'en ajoute pas une de plus.
+        if (!data.has(type) && data.count() >= config.maxSimultaneousInjuries) {
+            return;
+        }
+        // Delai de repit apres une blessure recente.
+        long now = player.getWorld().getTime();
+        if (now - data.getLastInjuryTick() < config.injuryCooldownTicks()) {
+            return;
+        }
+
+        if (data.add(type)) {
+            data.setLastInjuryTick(now);
             ((BackSlotAccess) player).medicalmod$markDirty();
             player.sendMessage(Text.translatable("message.medicalmod.injured", type.getDisplayName(), type.getCureName()), true);
             playInjurySound(player, type);
@@ -112,23 +117,30 @@ public final class InjuryManager {
      * (via ServerLivingEntityEvents.ALLOW_DAMAGE).
      */
     public static void onPlayerDamaged(ServerPlayerEntity player, DamageSource source, float amount) {
-        if (player.isCreative() || player.isSpectator()) {
+        MedicalModConfig config = MedicalModConfig.get();
+        if (!config.injuriesEnabled || player.isCreative() || player.isSpectator()) {
             return;
         }
         var random = player.getRandom();
 
-        // --- Chute -> fracture (+ commotion sur grosse chute) ---
-        if (source.isOf(DamageTypes.FALL) && amount >= FALL_THRESHOLD) {
-            float chance = (amount - FALL_THRESHOLD) * FALL_CHANCE_PER_POINT;
-            // Le parachute equipe avec "Atterrissage en douceur" divise le risque.
+        // --- Chute -> fracture (+ commotion sur tres grosse chute) ---
+        if (source.isOf(DamageTypes.FALL)) {
+            if (amount < config.fallDamageThreshold) {
+                return;
+            }
+            float chance = (amount - config.fallDamageThreshold) * config.fallChancePerPoint;
+            chance = Math.min(chance, config.fallChanceMax);
+
+            // Le parachute "Atterrissage en douceur" divise encore le risque.
             int soft = getBackEnchantLevel(player, ModEnchantments.SOFT_LANDING);
             if (soft > 0) {
                 chance /= (1.0F + soft);
             }
-            if (random.nextFloat() < Math.min(chance, 0.9F)) {
+            if (random.nextFloat() < config.scaled(chance)) {
                 injure(player, InjuryType.BROKEN_LEG);
             }
-            if (amount >= 12.0F && random.nextFloat() < 0.35F) {
+            if (amount >= config.concussionFallThreshold
+                    && random.nextFloat() < config.scaled(config.concussionFallChance)) {
                 injure(player, InjuryType.CONCUSSION);
             }
             return;
@@ -138,7 +150,7 @@ public final class InjuryManager {
         if (source.isIn(DamageTypeTags.IS_EXPLOSION)
                 || source.isOf(DamageTypes.FALLING_ANVIL)
                 || source.isOf(DamageTypes.FALLING_BLOCK)) {
-            if (random.nextFloat() < 0.4F) {
+            if (random.nextFloat() < config.scaled(config.concussionImpactChance)) {
                 injure(player, InjuryType.CONCUSSION);
             }
             return;
@@ -149,14 +161,15 @@ public final class InjuryManager {
                 || source.isOf(DamageTypes.CACTUS)
                 || source.isOf(DamageTypes.SWEET_BERRY_BUSH)
                 || source.isIn(DamageTypeTags.IS_PROJECTILE);
-        if (sharp && amount >= BLEED_THRESHOLD && random.nextFloat() < BLEED_CHANCE) {
+        if (sharp && amount >= config.bleedDamageThreshold
+                && random.nextFloat() < config.scaled(config.bleedChance)) {
             injure(player, InjuryType.BLEEDING);
         }
 
-        // --- Morsures de zombies / mobs -> infection ---
+        // --- Morsures de zombies / plaie ouverte -> infection ---
         if (source.getAttacker() instanceof ZombieEntity
                 || (source.getAttacker() instanceof HostileEntity && get(player).has(InjuryType.BLEEDING))) {
-            if (random.nextFloat() < INFECTION_CHANCE) {
+            if (random.nextFloat() < config.scaled(config.infectionChance)) {
                 injure(player, InjuryType.INFECTION);
             }
         }
@@ -189,8 +202,8 @@ public final class InjuryManager {
                         player.getX(), player.getY() + 0.9D, player.getZ(),
                         3, 0.25D, 0.35D, 0.25D, 0.0D);
             }
-            if (player.age % BLEED_INTERVAL == 0 && player.getHealth() > 1.0F) {
-                player.damage(player.getDamageSources().generic(), BLEED_DAMAGE);
+            if (player.age % MedicalModConfig.get().bleedIntervalTicks() == 0 && player.getHealth() > 1.0F) {
+                player.damage(player.getDamageSources().generic(), MedicalModConfig.get().bleedDamage);
             }
             // Rappel sonore discret : petite goutte.
             if (player.age % 55 == 0) {
