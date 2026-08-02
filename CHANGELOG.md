@@ -208,3 +208,16 @@ Commande pour l'obtenir : `/give @p medical-mod:potion_machine`
   qui n'existe que sur `BlockWithEntity` — or ce bloc etend `Block` directement et implemente
   `BlockEntityProvider` a part. Remplace par une comparaison de type manuelle. Le Distillateur
   nutritif compile et fonctionne desormais correctement.
+
+## 2.0.2 — Correctif de crash au demarrage (critique)
+
+- **Correctif** : le Distillateur nutritif utilisait `FabricBlockSettings.copyOf(Blocks.BLAST_FURNACE)`.
+  Cette copie recupere aussi la **fonction de luminosite** du haut-fourneau, qui lit la propriete
+  d'etat `lit`. Or le Distillateur ne possede pas cette propriete : Minecraft levait une
+  `IllegalArgumentException` et le jeu refusait de demarrer.
+- Remplace par des reglages explicites (`FabricBlockSettings.create()`) avec une luminosite
+  **constante**, independante de tout blockstate.
+- Les blocs de culture (coton, aloes, camomille, souci) copient `Blocks.WHEAT`, qui n'a
+  aucune luminosite dependant d'un etat : ils n'etaient pas concernes.
+
+Cette version corrige un crash bloquant : la 2.0.0 et la 2.0.1 sont inutilisables.

@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registries;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
@@ -27,7 +28,12 @@ public class ModBlocks {
      * Aucune recette de craft -> uniquement via /give (OP) ou creatif.
      */
     public static final Block POTION_MACHINE = registerBlockWithItem("potion_machine",
-            new PotionMachineBlock(FabricBlockSettings.copyOf(Blocks.BLAST_FURNACE).strength(-1.0F, 3600000.0F)));
+            new PotionMachineBlock(FabricBlockSettings.create()
+                    .requiresTool()
+                    .strength(-1.0F, 3600000.0F)   // incassable, comme la bedrock
+                    .sounds(BlockSoundGroup.METAL)
+                    .luminance(state -> 7)));       // luminosite CONSTANTE : ne depend
+                                                    // d'aucune propriete de blockstate
 
     private static Block registerBlockWithItem(String name, Block block) {
         Registry.register(Registries.ITEM, new Identifier(MedicalMod.MOD_ID, name),
