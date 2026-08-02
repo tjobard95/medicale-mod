@@ -35,10 +35,11 @@ public class MedicalMod implements ModInitializer {
         ModBlockEntities.registerBlockEntities();
         ModScreenHandlers.registerScreenHandlers();
         ModItems.registerModItems();
-        ModItemGroups.registerItemGroups();
         ModEnchantments.registerModEnchantments();
+        // Les effets et potions AVANT le groupe creatif : celui-ci y fait reference.
         ModEffects.registerModEffects();
         ModPotions.registerModPotions();
+        ModItemGroups.registerItemGroups();
         PotionMachineBlockEntity.initRecipes();
 
         registerTickLoop();

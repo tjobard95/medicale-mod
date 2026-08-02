@@ -2,6 +2,10 @@ package com.example.medicalmod.item;
 
 import com.example.medicalmod.MedicalMod;
 import com.example.medicalmod.block.ModBlocks;
+import com.example.medicalmod.potion.ModPotions;
+import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtil;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -45,8 +49,21 @@ public class ModItemGroups {
                         entries.add(ModBlocks.POTION_MACHINE);
                         // Parachute
                         entries.add(ModItems.PARACHUTE);
+                        // Potions du mod (fabriquees uniquement au Distillateur nutritif).
+                        // Une potion n'est pas un Item : c'est un ItemStack de minecraft:potion
+                        // auquel on applique la potion -> il faut les ajouter explicitement.
+                        addPotionForms(entries, ModPotions.SATURATION);
+                        addPotionForms(entries, ModPotions.ADRENALINE);
+                        addPotionForms(entries, ModPotions.FIRST_AID);
                     })
                     .build());
+
+    /** Ajoute une potion sous ses 3 formes : a boire, en jet, persistante. */
+    private static void addPotionForms(ItemGroup.Entries entries, Potion potion) {
+        entries.add(PotionUtil.setPotion(new ItemStack(Items.POTION), potion));
+        entries.add(PotionUtil.setPotion(new ItemStack(Items.SPLASH_POTION), potion));
+        entries.add(PotionUtil.setPotion(new ItemStack(Items.LINGERING_POTION), potion));
+    }
 
     public static void registerItemGroups() {
         MedicalMod.LOGGER.info("Enregistrement des groupes d'items de Medical Mod");

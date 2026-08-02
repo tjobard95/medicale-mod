@@ -232,3 +232,12 @@ Cette version corrige un crash bloquant : la 2.0.0 et la 2.0.1 sont inutilisable
   - fleche de progression au centre, qui se remplit pendant les 10 secondes de fabrication
   - case de sortie a droite, encadree pour la distinguer
 - La barre de progression dessinee "a la main" est remplacee par une vraie fleche texturee.
+
+## 2.1.1 — Potions visibles dans l'onglet creatif
+
+- **Correctif** : les 3 potions du mod n'apparaissaient pas dans l'onglet creatif "Medical Mod".
+  Une potion n'est pas un Item a part entiere : c'est un `minecraft:potion` auquel on applique
+  une potion via NBT. Elle doit donc etre ajoutee explicitement au groupe, ce qui n'etait pas fait.
+- Saturation, Adrenaline et Serum de premiers secours apparaissent desormais dans l'onglet,
+  sous leurs 3 formes : a boire, en jet, persistante.
+- Ordre d'enregistrement corrige : les potions sont enregistrees AVANT le groupe creatif.
